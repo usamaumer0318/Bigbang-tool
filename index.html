@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>One Page Tool Website</title>
+  <style>
+    body {font-family: Arial, sans-serif; margin: 0; background: #f4f6fa; color:#222;}
+    header {background: #4f46e5; color: white; padding: 20px; text-align: center;}
+    main {max-width: 900px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);}
+    h1,h2 {margin: 0 0 12px;}
+    label {display:block; margin: 12px 0 6px;}
+    input, select {width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;}
+    button {margin-top: 14px; background:#4f46e5; border:none; color:white; padding:10px 18px; border-radius:6px; cursor:pointer;}
+    button:hover {background:#4338ca;}
+    .result {margin-top:20px; padding:15px; background:#f9fafb; border:1px solid #ddd; border-radius:6px;}
+    footer {text-align:center; padding:18px; font-size:13px; color:#555;}
+    .tool {margin-bottom: 40px;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Simple One Page Tool Website</h1>
+    <p>Example: BMI Calculator + Calorie Calculator + Unit Converter</p>
+  </header>
+
+  <main>
+    <!-- BMI Calculator -->
+    <section class="tool">
+      <h2>BMI Calculator</h2>
+      <form id="bmiForm">
+        <label for="weight">Weight (kg)</label>
+        <input type="number" id="weight" required>
+
+        <label for="height">Height (cm)</label>
+        <input type="number" id="height" required>
+
+        <button type="submit">Calculate BMI</button>
+      </form>
+
+      <div class="result" id="bmiResult" style="display:none;"></div>
+    </section>
+
+    <!-- Calorie Calculator -->
+    <section class="tool">
+      <h2>Daily Calorie Needs Calculator</h2>
+      <form id="calorieForm">
+        <label for="age">Age (years)</label>
+        <input type="number" id="age" required>
+
+        <label for="gender">Gender</label>
+        <select id="gender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+
+        <label for="cweight">Weight (kg)</label>
+        <input type="number" id="cweight" required>
+
+        <label for="cheight">Height (cm)</label>
+        <input type="number" id="cheight" required>
+
+        <label for="activity">Activity Level</label>
+        <select id="activity">
+          <option value="1.2">Sedentary</option>
+          <option value="1.375">Lightly active</option>
+          <option value="1.55">Moderately active</option>
+          <option value="1.725">Very active</option>
+          <option value="1.9">Extra active</option>
+        </select>
+
+        <button type="submit">Calculate Calories</button>
+      </form>
+
+      <div class="result" id="calorieResult" style="display:none;"></div>
+    </section>
+
+    <!-- Unit Converter -->
+    <section class="tool">
+      <h2>Unit Converter (Kg ⇄ Lbs)</h2>
+      <form id="convertForm">
+        <label for="kg">Weight in Kg</label>
+        <input type="number" id="kg">
+
+        <label for="lbs">Weight in Lbs</label>
+        <input type="number" id="lbs">
+
+        <button type="button" id="kgToLbs">Convert Kg → Lbs</button>
+        <button type="button" id="lbsToKg">Convert Lbs → Kg</button>
+      </form>
+
+      <div class="result" id="convertResult" style="display:none;"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> One Page Tool Website</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // BMI Calculator
+    document.getElementById("bmiForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const weight = parseFloat(document.getElementById("weight").value);
+      const height = parseFloat(document.getElementById("height").value) / 100;
+
+      if(weight > 0 && height > 0){
+        const bmi = (weight / (height * height)).toFixed(2);
+        let category = "";
+        if(bmi < 18.5) category = "Underweight";
+        else if(bmi < 24.9) category = "Normal";
+        else if(bmi < 29.9) category = "Overweight";
+        else category = "Obese";
+
+        document.getElementById("bmiResult").style.display = "block";
+        document.getElementById("bmiResult").innerHTML = `<strong>Your BMI:</strong> ${bmi} (${category})`;
+      }
+    });
+
+    // Calorie Calculator
+    document.getElementById("calorieForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const age = parseFloat(document.getElementById("age").value);
+      const gender = document.getElementById("gender").value;
+      const weight = parseFloat(document.getElementById("cweight").value);
+      const height = parseFloat(document.getElementById("cheight").value);
+      const activity = parseFloat(document.getElementById("activity").value);
+
+      let bmr;
+      if(gender === "male"){
+        bmr = 10*weight + 6.25*height - 5*age + 5;
+      } else {
+        bmr = 10*weight + 6.25*height - 5*age - 161;
+      }
+      const calories = Math.round(bmr * activity);
+
+      document.getElementById("calorieResult").style.display = "block";
+      document.getElementById("calorieResult").innerHTML = `<strong>Estimated Daily Calories:</strong> ${calories} kcal`;
+    });
+
+    // Unit Converter
+    document.getElementById("kgToLbs").addEventListener("click", function(){
+      const kg = parseFloat(document.getElementById("kg").value);
+      if(kg > 0){
+        const lbs = (kg * 2.20462).toFixed(2);
+        document.getElementById("convertResult").style.display = "block";
+        document.getElementById("convertResult").innerHTML = `${kg} Kg = ${lbs} Lbs`;
+      }
+    });
+
+    document.getElementById("lbsToKg").addEventListener("click", function(){
+      const lbs = parseFloat(document.getElementById("lbs").value);
+      if(lbs > 0){
+        const kg = (lbs / 2.20462).toFixed(2);
+        document.getElementById("convertResult").style.display = "block";
+        document.getElementById("convertResult").innerHTML = `${lbs} Lbs = ${kg} Kg`;
+      }
+    });
+  </script>
+</body>
+</html>
