@@ -1,163 +1,348 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>One Page Tool Website</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bigbang Tools — Beautiful Theme</title>
+  <meta name="description" content="A sleek, modern single‑file theme for your tool website (BMI, Calorie Checker, etc.)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body {font-family: Arial, sans-serif; margin: 0; background: #f4f6fa; color:#222;}
-    header {background: #4f46e5; color: white; padding: 20px; text-align: center;}
-    main {max-width: 900px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);}
-    h1,h2 {margin: 0 0 12px;}
-    label {display:block; margin: 12px 0 6px;}
-    input, select {width:100%; padding:10px; border:1px solid #ddd; border-radius:6px;}
-    button {margin-top: 14px; background:#4f46e5; border:none; color:white; padding:10px 18px; border-radius:6px; cursor:pointer;}
-    button:hover {background:#4338ca;}
-    .result {margin-top:20px; padding:15px; background:#f9fafb; border:1px solid #ddd; border-radius:6px;}
-    footer {text-align:center; padding:18px; font-size:13px; color:#555;}
-    .tool {margin-bottom: 40px;}
+    :root {
+      --bg: #0b0f1a;
+      --card: rgba(255,255,255,0.07);
+      --card-strong: rgba(255,255,255,0.14);
+      --text: #e6e9ef;
+      --muted: #b5bfd3;
+      --accent: #8b5cf6; /* violet */
+      --accent-2: #06b6d4; /* cyan */
+      --ring: rgba(139,92,246,0.45);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 18px;
+      --glass: blur(10px) saturate(130%);
+    }
+    body.light {
+      --bg: #f7f8fb;
+      --card: rgba(255,255,255,0.7);
+      --card-strong: rgba(255,255,255,0.95);
+      --text: #0c1022;
+      --muted: #4a5568;
+      --ring: rgba(99,102,241,0.35);
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text); background: var(--bg);
+      line-height: 1.5; overflow-x: hidden;
+    }
+
+    /* Animated gradient background */
+    .bg-gradient {
+      position: fixed; inset: -20vmax; z-index: -1; filter: blur(80px) saturate(140%);
+      background: radial-gradient(35vmax 35vmax at 15% 15%, rgba(139,92,246,0.18), transparent 60%),
+                  radial-gradient(40vmax 40vmax at 85% 25%, rgba(6,182,212,0.18), transparent 60%),
+                  radial-gradient(45vmax 45vmax at 30% 80%, rgba(236,72,153,0.18), transparent 60%);
+      animation: float 18s ease-in-out infinite alternate;
+    }
+    @keyframes float { from { transform: translateY(-2%) } to { transform: translateY(2%) } }
+
+    /* Layout */
+    .container { width: min(1200px, 92%); margin: 0 auto; }
+    header {
+      position: sticky; top: 0; backdrop-filter: var(--glass);
+      background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.0));
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 50;
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+    .logo {
+      width: 38px; height: 38px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+    }
+    .brand span { font-weight: 800; letter-spacing: 0.3px; font-size: 1.05rem; }
+    nav a { color: var(--muted); text-decoration: none; margin: 0 8px; font-weight: 500; }
+    nav a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 12px 16px;
+      border-radius: 999px; border: 1px solid rgba(255,255,255,0.15);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      color: var(--text); text-decoration: none; font-weight: 600; box-shadow: var(--shadow);
+      transition: transform .15s ease, box-shadow .15s ease, background .25s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 30px rgba(0,0,0,0.35); }
+    .btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border: none; }
+
+    /* Hero */
+    .hero { padding: 64px 0 28px; }
+    .hero-inner { display: grid; grid-template-columns: 1.25fr 1fr; gap: 28px; align-items: center; }
+    .hero h1 { font-size: clamp(2.1rem, 3.6vw, 3.2rem); line-height: 1.1; margin: 0 0 10px; letter-spacing: -0.02em; }
+    .hero p { color: var(--muted); font-size: clamp(1rem, 1.2vw, 1.125rem); margin: 0 0 20px; }
+    .hero-card { padding: 20px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(180deg, var(--card-strong), var(--card)); backdrop-filter: var(--glass);
+      box-shadow: var(--shadow);
+    }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+    .stat { padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); background: var(--card);
+      text-align: center; }
+    .stat b { display: block; font-size: 1.15rem; }
+
+    /* Tools Grid */
+    .section { padding: 36px 0 70px; }
+    .section h2 { font-size: clamp(1.5rem, 2.2vw, 2rem); margin: 0 0 16px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .col-4 { grid-column: span 12; }
+    @media (min-width: 640px) { .col-4 { grid-column: span 6; } }
+    @media (min-width: 980px) { .col-4 { grid-column: span 4; } }
+
+    .card { position: relative; padding: 18px; border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card-strong), var(--card));
+      border: 1px solid rgba(255,255,255,0.12); box-shadow: var(--shadow); }
+    .card h3 { margin: 4px 0 10px; }
+    .card p { margin: 0 0 12px; color: var(--muted); }
+    .chip { position: absolute; top: 12px; right: 12px; font-size: 12px; background: rgba(139,92,246,0.18);
+      border: 1px solid rgba(139,92,246,0.35); padding: 6px 10px; border-radius: 999px; }
+
+    .input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06); color: var(--text); outline: none; }
+    .input:focus { box-shadow: 0 0 0 4px var(--ring); border-color: transparent; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* Footer */
+    footer { border-top: 1px solid rgba(255,255,255,0.08); padding: 26px 0; color: var(--muted); text-align: center; }
+
+    /* Floating actions */
+    .mode-toggle { position: fixed; bottom: 20px; right: 20px; z-index: 60; }
+    .to-top { position: fixed; bottom: 20px; left: 20px; z-index: 60; opacity: 0; pointer-events: none; transform: translateY(8px); transition: .2s ease; }
+    .to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+    /* Small animations */
+    .fade-up { opacity: 0; transform: translateY(12px); animation: fadeUp .6s ease forwards; }
+    .fade-up.d2 { animation-delay: .1s }
+    .fade-up.d3 { animation-delay: .2s }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0) } }
+
+    /* Urdu support: right-to-left helper (toggle by adding .rtl on body if you prefer) */
+    body.rtl { direction: rtl; }
+    body.rtl .nav { flex-direction: row-reverse; }
   </style>
 </head>
 <body>
+  <div class="bg-gradient" aria-hidden="true"></div>
+
   <header>
-    <h1>Simple One Page Tool Website</h1>
-    <p>Example: BMI Calculator + Calorie Calculator + Unit Converter</p>
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="Bigbang Tools Home">
+        <div class="logo"></div>
+        <span>Bigbang Tools</span>
+      </a>
+      <nav>
+        <a href="#tools">Tools</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="btn" href="#tools">Explore</a>
+    </div>
   </header>
 
-  <main>
-    <!-- BMI Calculator -->
-    <section class="tool">
-      <h2>BMI Calculator</h2>
-      <form id="bmiForm">
-        <label for="weight">Weight (kg)</label>
-        <input type="number" id="weight" required>
-
-        <label for="height">Height (cm)</label>
-        <input type="number" id="height" required>
-
-        <button type="submit">Calculate BMI</button>
-      </form>
-
-      <div class="result" id="bmiResult" style="display:none;"></div>
+  <main id="top" class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="fade-up">
+          <h1>Fast, clean, and beautiful tools — all in one page.</h1>
+          <p>Use our BMI calculator, calorie checker, and other utilities inside a sleek, responsive theme with dark/light mode. Drop in your existing code and you're live.</p>
+          <div style="display:flex; gap:10px; flex-wrap: wrap;">
+            <a class="btn primary" href="#tools">Open Tools</a>
+            <a class="btn" href="#faq">How it works</a>
+          </div>
+          <div class="stats">
+            <div class="stat"><b>100%</b> Responsive</div>
+            <div class="stat"><b>1 File</b> Easy deploy</div>
+            <div class="stat"><b>0 deps</b> No frameworks</div>
+          </div>
+        </div>
+        <div class="hero-card fade-up d2">
+          <div style="display:grid; grid-template-columns: 1fr; gap:10px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div class="logo" style="width:28px; height:28px; border-radius:8px;"></div>
+              <strong>Theme highlights</strong>
+            </div>
+            <ul style="margin:0; padding-left:18px; color:var(--muted)">
+              <li>Glassmorphism cards with soft shadows</li>
+              <li>Dark/Light toggle with memory</li>
+              <li>Smooth animations & sticky header</li>
+              <li>Mobile‑first grid for your tools</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Calorie Calculator -->
-    <section class="tool">
-      <h2>Daily Calorie Needs Calculator</h2>
-      <form id="calorieForm">
-        <label for="age">Age (years)</label>
-        <input type="number" id="age" required>
+    <!-- TOOLS GRID -->
+    <section id="tools" class="section">
+      <h2 class="fade-up">Your Tools</h2>
+      <p class="fade-up d2" style="color:var(--muted); margin:6px 0 18px">Add or edit cards below. Replace placeholders with your real tool code (BMI, Calorie Checker, Unit Converter, etc.).</p>
 
-        <label for="gender">Gender</label>
-        <select id="gender">
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-        </select>
+      <div class="grid">
+        <!-- Tool Card 1: BMI Calculator (sample) -->
+        <article class="card col-4 fade-up">
+          <span class="chip">BMI</span>
+          <h3>BMI Calculator</h3>
+          <p>Enter your height and weight to estimate Body Mass Index.</p>
+          <div class="row" style="margin-bottom:10px;">
+            <input id="bmi-height" class="input" type="number" placeholder="Height (cm)" />
+            <input id="bmi-weight" class="input" type="number" placeholder="Weight (kg)" />
+          </div>
+          <button class="btn primary" onclick="calcBMI()">Calculate BMI</button>
+          <div id="bmi-result" style="margin-top:12px; color:var(--muted)">—</div>
+        </article>
 
-        <label for="cweight">Weight (kg)</label>
-        <input type="number" id="cweight" required>
+        <!-- Tool Card 2: Calorie Checker (sample) -->
+        <article class="card col-4 fade-up d2">
+          <span class="chip">Calories</span>
+          <h3>Calorie Checker</h3>
+          <p>Quickly estimate daily calories using Mifflin‑St Jeor.</p>
+          <div class="row" style="margin-bottom:10px;">
+            <input id="cal-age" class="input" type="number" placeholder="Age (years)" />
+            <input id="cal-weight" class="input" type="number" placeholder="Weight (kg)" />
+          </div>
+          <div class="row" style="margin-bottom:10px;">
+            <input id="cal-height" class="input" type="number" placeholder="Height (cm)" />
+            <select id="cal-sex" class="input">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <select id="cal-activity" class="input" style="margin-bottom:10px;">
+            <option value="1.2">Sedentary</option>
+            <option value="1.375">Lightly active</option>
+            <option value="1.55">Moderately active</option>
+            <option value="1.725">Very active</option>
+            <option value="1.9">Extra active</option>
+          </select>
+          <button class="btn primary" onclick="calcCalories()">Estimate Calories</button>
+          <div id="cal-result" style="margin-top:12px; color:var(--muted)">—</div>
+        </article>
 
-        <label for="cheight">Height (cm)</label>
-        <input type="number" id="cheight" required>
-
-        <label for="activity">Activity Level</label>
-        <select id="activity">
-          <option value="1.2">Sedentary</option>
-          <option value="1.375">Lightly active</option>
-          <option value="1.55">Moderately active</option>
-          <option value="1.725">Very active</option>
-          <option value="1.9">Extra active</option>
-        </select>
-
-        <button type="submit">Calculate Calories</button>
-      </form>
-
-      <div class="result" id="calorieResult" style="display:none;"></div>
+        <!-- Tool Card 3: Your Own Tool placeholder -->
+        <article class="card col-4 fade-up d3">
+          <span class="chip">Custom</span>
+          <h3>Your Tool</h3>
+          <p>Paste your existing tool HTML/JS here or link to another page.</p>
+          <!-- Example input -->
+          <input class="input" placeholder="Your input…" />
+          <div style="display:flex; gap:10px; margin-top:10px;">
+            <button class="btn">Preview</button>
+            <a class="btn" href="#" target="_blank" rel="noopener">Open</a>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <!-- Unit Converter -->
-    <section class="tool">
-      <h2>Unit Converter (Kg ⇄ Lbs)</h2>
-      <form id="convertForm">
-        <label for="kg">Weight in Kg</label>
-        <input type="number" id="kg">
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <h2 class="fade-up">FAQ</h2>
+      <div class="grid">
+        <div class="card col-4 fade-up">
+          <h3>How do I add my existing tool code?</h3>
+          <p>Open this file, find the <code>&lt;!-- TOOLS GRID --&gt;</code> section, and replace a card's inner HTML with your tool's form and JavaScript. Keep the <code>.card</code> class for styling.</p>
+        </div>
+        <div class="card col-4 fade-up d2">
+          <h3>Does it work on phones?</h3>
+          <p>Yes. The layout is mobile‑first and adapts to tablets and desktops with a responsive CSS grid.</p>
+        </div>
+        <div class="card col-4 fade-up d3">
+          <h3>Can I switch to light mode?</h3>
+          <p>Use the floating moon/sun button at the bottom‑right. Your choice is saved for next time.</p>
+        </div>
+      </div>
+    </section>
 
-        <label for="lbs">Weight in Lbs</label>
-        <input type="number" id="lbs">
-
-        <button type="button" id="kgToLbs">Convert Kg → Lbs</button>
-        <button type="button" id="lbsToKg">Convert Lbs → Kg</button>
-      </form>
-
-      <div class="result" id="convertResult" style="display:none;"></div>
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <div class="card fade-up">
+        <h3>Contact</h3>
+        <p style="color:var(--muted)">Have a new tool idea or need integration help? Reach out.</p>
+        <div class="row">
+          <input class="input" placeholder="Your email" />
+          <button class="btn primary">Send</button>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>© <span id="year"></span> One Page Tool Website</p>
+    <div class="container">© <span id="year"></span> Bigbang Tools. All rights reserved.</div>
   </footer>
 
+  <!-- Floating Actions -->
+  <button class="btn mode-toggle" id="modeBtn" aria-label="Toggle theme">🌙</button>
+  <a class="btn to-top" id="toTop" href="#top" aria-label="Back to top">↑ Top</a>
+
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    // BMI Calculator
-    document.getElementById("bmiForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      const weight = parseFloat(document.getElementById("weight").value);
-      const height = parseFloat(document.getElementById("height").value) / 100;
+    // Theme toggle with persistence
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    const saved = localStorage.getItem('theme');
+    const isLight = saved ? saved === 'light' : prefersLight;
+    if (isLight) document.body.classList.add('light');
 
-      if(weight > 0 && height > 0){
-        const bmi = (weight / (height * height)).toFixed(2);
-        let category = "";
-        if(bmi < 18.5) category = "Underweight";
-        else if(bmi < 24.9) category = "Normal";
-        else if(bmi < 29.9) category = "Overweight";
-        else category = "Obese";
-
-        document.getElementById("bmiResult").style.display = "block";
-        document.getElementById("bmiResult").innerHTML = `<strong>Your BMI:</strong> ${bmi} (${category})`;
-      }
+    const modeBtn = document.getElementById('modeBtn');
+    const setIcon = () => modeBtn.textContent = document.body.classList.contains('light') ? '🌞' : '🌙';
+    setIcon();
+    modeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+      localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+      setIcon();
     });
 
-    // Calorie Calculator
-    document.getElementById("calorieForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      const age = parseFloat(document.getElementById("age").value);
-      const gender = document.getElementById("gender").value;
-      const weight = parseFloat(document.getElementById("cweight").value);
-      const height = parseFloat(document.getElementById("cheight").value);
-      const activity = parseFloat(document.getElementById("activity").value);
+    // Back to top visibility
+    const toTop = document.getElementById('toTop');
+    const onScroll = () => {
+      if (window.scrollY > 400) toTop.classList.add('show');
+      else toTop.classList.remove('show');
+    };
+    document.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
-      let bmr;
-      if(gender === "male"){
-        bmr = 10*weight + 6.25*height - 5*age + 5;
-      } else {
-        bmr = 10*weight + 6.25*height - 5*age - 161;
-      }
-      const calories = Math.round(bmr * activity);
+    // Sample calculators (you can replace with your own logic)
+    function calcBMI(){
+      const h = parseFloat(document.getElementById('bmi-height').value);
+      const w = parseFloat(document.getElementById('bmi-weight').value);
+      if(!h || !w){ document.getElementById('bmi-result').textContent = 'Please enter height & weight.'; return; }
+      const m = h/100; const bmi = w/(m*m);
+      let cat = 'Normal';
+      if (bmi < 18.5) cat = 'Underweight';
+      else if (bmi < 25) cat = 'Normal';
+      else if (bmi < 30) cat = 'Overweight';
+      else cat = 'Obese';
+      document.getElementById('bmi-result').textContent = `BMI: ${bmi.toFixed(1)} (${cat})`;
+    }
 
-      document.getElementById("calorieResult").style.display = "block";
-      document.getElementById("calorieResult").innerHTML = `<strong>Estimated Daily Calories:</strong> ${calories} kcal`;
-    });
-
-    // Unit Converter
-    document.getElementById("kgToLbs").addEventListener("click", function(){
-      const kg = parseFloat(document.getElementById("kg").value);
-      if(kg > 0){
-        const lbs = (kg * 2.20462).toFixed(2);
-        document.getElementById("convertResult").style.display = "block";
-        document.getElementById("convertResult").innerHTML = `${kg} Kg = ${lbs} Lbs`;
-      }
-    });
-
-    document.getElementById("lbsToKg").addEventListener("click", function(){
-      const lbs = parseFloat(document.getElementById("lbs").value);
-      if(lbs > 0){
-        const kg = (lbs / 2.20462).toFixed(2);
-        document.getElementById("convertResult").style.display = "block";
-        document.getElementById("convertResult").innerHTML = `${lbs} Lbs = ${kg} Kg`;
-      }
-    });
+    function calcCalories(){
+      const age = parseFloat(document.getElementById('cal-age').value);
+      const w = parseFloat(document.getElementById('cal-weight').value);
+      const h = parseFloat(document.getElementById('cal-height').value);
+      const sex = document.getElementById('cal-sex').value;
+      const activity = parseFloat(document.getElementById('cal-activity').value || '1.2');
+      if(!age || !w || !h){ document.getElementById('cal-result').textContent = 'Please enter age, height & weight.'; return; }
+      // Mifflin‑St Jeor
+      const bmr = sex === 'male' ? (10*w + 6.25*h - 5*age + 5) : (10*w + 6.25*h - 5*age - 161);
+      const tdee = Math.round(bmr * activity);
+      document.getElementById('cal-result').textContent = `Estimated daily calories: ${tdee.toLocaleString()} kcal`;
+    }
   </script>
 </body>
 </html>
