@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>صحت کے ٹولز — BMI, کیلوریز، وزن</title>
+  <meta name="description" content="بی ایم آئی کیلکولیٹر، روزانہ کیلوریز چیک، اور صحت مند وزن کی رینج — ایک ہی فائل میں۔" />
+  <style>
+    body {font-family: 'Noto Naskh Arabic UI', Arial, sans-serif; background:#f9f9f9; margin:0; padding:0; color:#222;}
+    header {background:#006d77; color:white; padding:20px; text-align:center;}
+    h1 {margin:0;}
+    .container {max-width:900px; margin:20px auto; padding:20px; background:white; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,.1);}
+    h2 {margin-top:0; color:#006d77;}
+    label {display:block; margin-top:10px; font-weight:bold;}
+    input, select {width:100%; padding:10px; margin-top:5px; border:1px solid #ccc; border-radius:6px;}
+    button {margin-top:15px; padding:10px 15px; background:#006d77; color:white; border:none; border-radius:6px; cursor:pointer;}
+    button:hover {background:#004f52;}
+    .result {margin-top:15px; padding:10px; border-radius:6px; background:#edf6f9;}
+    footer {text-align:center; padding:20px; font-size:14px; color:#555;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>صحت کے ٹولز</h1>
+    <p>BMI کیلکولیٹر، کیلوریز چیک، وزن کی رینج</p>
+  </header>
+
+  <div class="container">
+    <!-- BMI -->
+    <section>
+      <h2>BMI کیلکولیٹر</h2>
+      <label>وزن</label>
+      <input type="number" id="bmi_weight" placeholder="وزن (kg)">
+      <label>قد</label>
+      <input type="number" id="bmi_height" placeholder="قد (cm)">
+      <button onclick="calcBMI()">حساب کریں</button>
+      <div class="result" id="bmi_result"></div>
+    </section>
+
+    <!-- Calories -->
+    <section>
+      <h2>کیلوریز چیک (TDEE)</h2>
+      <label>جنس</label>
+      <select id="cal_gender">
+        <option value="male">مرد</option>
+        <option value="female">عورت</option>
+      </select>
+      <label>عمر</label>
+      <input type="number" id="cal_age" placeholder="عمر (سال)">
+      <label>وزن</label>
+      <input type="number" id="cal_weight" placeholder="وزن (kg)">
+      <label>قد</label>
+      <input type="number" id="cal_height" placeholder="قد (cm)">
+      <label>سرگرمی کی سطح</label>
+      <select id="cal_activity">
+        <option value="1.2">بیٹھک (کم حرکت)</option>
+        <option value="1.375">ہلکی سرگرمی</option>
+        <option value="1.55" selected>درمیانی سرگرمی</option>
+        <option value="1.725">زیادہ سرگرم</option>
+        <option value="1.9">انتہائی سرگرم</option>
+      </select>
+      <button onclick="calcCalories()">حساب کریں</button>
+      <div class="result" id="cal_result"></div>
+    </section>
+
+    <!-- Weight Range -->
+    <section>
+      <h2>قد کے حساب سے صحت مند وزن</h2>
+      <label>قد</label>
+      <input type="number" id="wt_height" placeholder="قد (cm)">
+      <button onclick="calcWeightRange()">حساب کریں</button>
+      <div class="result" id="wt_result"></div>
+    </section>
+  </div>
+
+  <footer>
+    © <span id="year"></span> BigBang Tool — GitHub Pages پر مفت ویب سائٹ
+  </footer>
+
+<script>
+  document.getElementById("year").innerText = new Date().getFullYear();
+
+  function calcBMI() {
+    const w = parseFloat(document.getElementById("bmi_weight").value);
+    const h = parseFloat(document.getElementById("bmi_height").value) / 100;
+    if (!w || !h) {document.getElementById("bmi_result").innerText="براہ کرم درست قد اور وزن درج کریں";return;}
+    const bmi = w / (h*h);
+    let cat="";
+    if(bmi<18.5) cat="کم وزن";
+    else if(bmi<25) cat="نارمل";
+    else if(bmi<30) cat="زیادہ وزن";
+    else cat="موٹاپا";
+    document.getElementById("bmi_result").innerHTML = `BMI: ${bmi.toFixed(1)} (${cat})`;
+  }
+
+  function calcCalories() {
+    const gender=document.getElementById("cal_gender").value;
+    const age=parseInt(document.getElementById("cal_age").value);
+    const w=parseFloat(document.getElementById("cal_weight").value);
+    const h=parseFloat(document.getElementById("cal_height").value);
+    const act=parseFloat(document.getElementById("cal_activity").value);
+    if(!age||!w||!h){document.getElementById("cal_result").innerText="براہ کرم تمام خانے پُر کریں";return;}
+    const BMR = gender==="male"? (10*w+6.25*h-5*age+5) : (10*w+6.25*h-5*age-161);
+    const TDEE = BMR*act;
+    document.getElementById("cal_result").innerHTML=`بنیادی توانائی (BMR): ${Math.round(BMR)} kcal/day<br>روزانہ کیلوریز (TDEE): ${Math.round(TDEE)} kcal/day`;
+  }
+
+  function calcWeightRange(){
+    const h=parseFloat(document.getElementById("wt_height").value);
+    if(!h){document.getElementById("wt_result").innerText="براہ کرم قد درج کریں";return;}
+    const m=h/100;
+    const min=18.5*m*m;
+    const max=24.9*m*m;
+    document.getElementById("wt_result").innerHTML=`صحت مند وزن کی رینج: ${min.toFixed(1)}kg - ${max.toFixed(1)}kg`;
+  }
+</script>
+</body>
+</html>
